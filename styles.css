@@ -1,3 +1,8 @@
 *{
     background: #444;
+    color: #fff;
+}
+
+#cityForm{
+    display: grid;
 }

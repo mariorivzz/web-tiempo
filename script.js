@@ -1,30 +1,50 @@
-window.addEventListener("load", ()=> {
-    if(navigator.geolocation){
+const cityForm = document.getElementById('cityForm');
+const cityInput = document.getElementById('cityInput');
+const weatherInfo = document.getElementById('weatherInfo');
+// Importa dotenv para cargar las variables de entorno desde el archivo .env
+require('dotenv').config();
 
-        let lon, lat
+// Accede a la variable de entorno API_KEY
+const apiKey = process.env.API_KEY;
 
-        const apiKey = "162c8f7dfe0247dd535f7dabcebb147c"
+// Utiliza la apiKey en tu script
+console.log(apiKey);
 
-        navigator.geolocation.getCurrentPosition( position => {
-            lon = position.coords.longitude
-            lat = position.coords.latitude
+cityForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const city = cityInput.value;
+    getWeather(city);
+});
 
-            
-            /* const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}` */
+const weatherDescriptions = {
+  'Clear': 'Despejado',
+  'Clouds': 'Nublado',
+  'Rain': 'Lluvia',
+  // Agrega más descripciones según sea necesario
+};
 
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=Salamanca&appid=${apiKey}`
+function getWeatherDescription(weatherCode) {
+  return weatherDescriptions[weatherCode] || weatherCode;
+}
 
-            /* const url = `https://api.openweathermap.org/data/2.5/weather?q={Salamanca},{es}&appid=${apiKey}` */
+function kelvinToCelsius(kelvin) {
+  return kelvin - 273.15;
+}
 
-
-            console.log(url);
-
-        })
-
-        }
-    }
-)
-
+function getWeather(city) {
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+      .then(response => response.json())
+      .then(data => {
+          const weather = getWeatherDescription(data.weather[0].main);
+          const temperature = kelvinToCelsius(data.main.temp).toFixed(1);
+          const cityName = data.name;
+          weatherInfo.innerHTML = `Tiempo en ${cityName}: ${weather}, Temperatura: ${temperature}°C`;
+      })
+      .catch(error => {
+          console.error('Error fetching weather data:', error);
+          weatherInfo.innerHTML = 'Error fetching weather data. Please try again.';
+      });
+}
 
 
 /* if (navigator.geolocation) {
