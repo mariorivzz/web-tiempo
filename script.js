@@ -1,13 +1,9 @@
 const cityForm = document.getElementById('cityForm');
 const cityInput = document.getElementById('cityInput');
 const weatherInfo = document.getElementById('weatherInfo');
-// Importa dotenv para cargar las variables de entorno desde el archivo .env
-require('dotenv').config();
+const apiKey = '162c8f7dfe0247dd535f7dabcebb147c';
 
-// Accede a la variable de entorno API_KEY
-const apiKey = process.env.API_KEY;
-
-// Utiliza la apiKey en tu script
+// Use the apiKey in your script
 console.log(apiKey);
 
 cityForm.addEventListener('submit', (e) => {
